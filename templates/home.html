@@ -1,40 +1,219 @@
-{%extends 'main.html'%}
-{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
-    <!-- Add any CSS stylesheets or meta tags here -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <style>
+    /* Basic styling */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .card {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      flex: 1;
+    }
+    .card-header {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .card-body {
+      font-size: 16px;
+    }
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .card-small {
+      padding: 10px;
+      background: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+    .card-small h3 {
+      margin-top: 0;
+    }
+    .create-user-btn {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .create-user-btn:hover {
+      background-color: #0056b3;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+
+    /* Popup Form Styling */
+    .popup-form {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Welcome to My Website Mr {{username}}</h1>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/about">About</a></li>
-                <li><a href="/contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+  <div class="container">
+    <div class="header">
+      <h1>Dashboard</h1>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="card-header">Users</div>
+        <div class="card-body">
+          <p>Number: {{users_count}}</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">Rooms</div>
+        <div class="card-body">
+          <p>Number: {{rooms_count}}</p>
+        </div>
+      </div>
+    </div>
+    <button class="create-user-btn">Create User</button>
 
-    <main>
-        <section>
-            <h2>About Us</h2>
-            <p>Welcome to our website. We provide amazing services.</p>
-        </section>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>City</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+          <tr>
+            <td>{{user.id}}</td>
+            <td>{{user.username}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.profile.gender}}</td>
+            <td>{{user.profile.city}}</td>
+            <td>
+              {% if user.is_staff %}
+               <p>Staff</p>
+              {% else %}
+              <p>User</p>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+          <!-- Add more rows as needed -->
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-        <section>
-            <h2>Latest News</h2>
-            <p>Stay tuned for our latest updates and news.</p>
-        </section>
-    </main>
+  <!-- Popup Form HTML -->
+  <div class="popup-form" id="user-form">
+    <h2>Create User</h2>
+    <form id="create-user-form" method="POST" action="/createuser/">
+      <!-- Add form fields for user details -->
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required><br><br>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required><br><br>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required><br><br>
+      <label for="gender">Gender:</label>
+      <input type="text" id="gender" name="gender" required><br><br>
+      <label for="city">City:</label>
+      <input type="text" id="city" name="city" required><br><br>
+      <!-- Add more fields as needed -->
+      <button type="submit">Submit</button>
+    </form>
+    <button onclick="closePopup()">Close</button>
+  </div>
 
-    <footer>
-        <p>&copy; 2024 MyWebsite. All rights reserved.</p>
-    </footer>
+  <script>
+    // Function to open popup form
+    function openPopup() {
+      document.getElementById("user-form").style.display = "block";
+    }
+
+    // Function to close popup form
+    function closePopup() {
+      document.getElementById("user-form").style.display = "none";
+    }
+
+    // Event listener for "Create User" button
+    document.querySelector('.create-user-btn').addEventListener('click', function() {
+      openPopup();
+    });
+    document.getElementById('create-user-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission behavior
+    
+        // Fetch the form data
+        const formData = new FormData(this);
+    
+        // Send a POST request to the server
+        fetch('/createuser/', {
+          method: 'POST',
+          body: formData,
+        })
+        .then(response => {
+          if (response.ok) {
+            // Handle successful response, e.g., show a success message
+            alert('User created successfully');
+            closePopup(); // Close the popup form
+            window.location.reload();
+            // Optionally, you can reload the page or perform other actions
+          } else {
+            // Handle errors, e.g., show an error message
+            alert('An error occurred while creating the user');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred while creating the user');
+        });
+      });
+  </script>
 </body>
 </html>
-{% endblock %}
