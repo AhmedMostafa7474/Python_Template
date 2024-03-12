@@ -11,12 +11,15 @@ class UserProfileSerializer(serializers.ModelSerializer):
                 
 class UserSerializer(serializers.ModelSerializer):
     gender = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
     def get_gender(self, obj):
         return obj.profile.gender
+    def get_image(self, obj):
+        return obj.profile.image.url
         
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'email', 'gender', 'is_staff', 'is_active', 'last_login']
+        fields = ['id', 'username', 'first_name', 'email', 'gender','image', 'is_staff', 'is_active', 'last_login']
 
 
 class RequestSerializer(serializers.ModelSerializer):
