@@ -13,9 +13,16 @@ class UserSerializer(serializers.ModelSerializer):
     gender = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
     def get_gender(self, obj):
-        return obj.profile.gender
+        try:
+            return obj.profile.gender
+        except:
+            return ""
     def get_image(self, obj):
-        return obj.profile.image.url
+        try:
+            return obj.profile.image.url
+        except:
+            return ""
+    
         
     class Meta:
         model = User
