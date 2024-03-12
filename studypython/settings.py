@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'studypython.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_pycopg2',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'djangoprod',
         'USER' : 'admin',
         'PASSWORD' : 'password',
