@@ -46,6 +46,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     gender = models.CharField(max_length=100,null=True,blank=True)
     city = models.CharField(max_length=100,null=True,blank=True)
+    image = models.ImageField(null=True,blank=True,default="eyouth.png")
     # Add other additional fields as needed
 
     def __str__(self):
