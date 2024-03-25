@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ['gender', 'city']  # Add other fields as needed
+        fields = ['gender', 'city'] 
                 
 class UserSerializer(serializers.ModelSerializer):
     gender = serializers.SerializerMethodField()
@@ -32,7 +32,7 @@ class UserSerializer(serializers.ModelSerializer):
 class RequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoomRequest
-        fields = ['requester_name', 'price']  # Add any other fields you want to include
+        fields = ['requester_name', 'price','type']
         
 class ChairSerializer(serializers.ModelSerializer):
     class Meta:

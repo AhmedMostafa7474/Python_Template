@@ -25,8 +25,13 @@ class Chair(models.Model):
         return self.name   
     
 class RoomRequest(models.Model):
+    Room_Choices = [
+        ('Full Board', 'Full Board'),
+        ('Half Board', 'Half Board'),
+    ]
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='requests')
     requester_name = models.CharField(max_length=200)
+    type = models.CharField(max_length=200,null=True,blank=True,choices=Room_Choices)
     price = models.IntegerField()
 
     def __str__(self):
