@@ -52,7 +52,7 @@ class FormSubmissionView(APIView):
         return JsonResponse({'Deadlines': serializer.data})
     def post(self,request):
         username = request.data.get('username')
-        email = request.data.get('username')
+        email = request.data.get('email')
         code = request.data.get('code')
         image = request.FILES.get('image')
         
