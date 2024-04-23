@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Room,RoomRequest,UserProfile,Chair
+from .models import Owner, Room,RoomRequest,UserProfile,Chair
 from django.contrib.auth.models import User
 
 
@@ -29,10 +29,17 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'first_name', 'email', 'gender','image', 'is_staff', 'is_active', 'last_login']
 
 
+class OwnerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Owner
+        fields = ['name']
+        
+        
 class RequestSerializer(serializers.ModelSerializer):
+    owner = OwnerSerializer(many=True)
     class Meta:
         model = RoomRequest
-        fields = ['requester_name', 'price','type']
+        fields = ['requester_name', 'price','type','owner']
         
 class ChairSerializer(serializers.ModelSerializer):
     class Meta:

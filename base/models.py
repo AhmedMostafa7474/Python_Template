@@ -23,7 +23,12 @@ class Chair(models.Model):
       name = models.CharField(max_length=200)  
       def __str__(self):
         return self.name   
-    
+
+class Owner(models.Model):
+      name = models.CharField(max_length=200)  
+      def __str__(self):
+        return self.name 
+        
 class RoomRequest(models.Model):
     Room_Choices = [
         ('Full Board', 'Full Board'),
@@ -33,6 +38,7 @@ class RoomRequest(models.Model):
     requester_name = models.CharField(max_length=200)
     type = models.CharField(max_length=200,null=True,blank=True,choices=Room_Choices)
     price = models.IntegerField()
+    owner = models.ManyToManyField(Owner,blank=True)
 
     def __str__(self):
         return self.requester_name

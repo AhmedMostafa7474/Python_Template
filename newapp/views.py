@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import CourseDeadline
+from .models import CourseDeadline,FormSubmission
 
 # Create your views here.
 from django.http import HttpResponse
@@ -34,6 +34,32 @@ class CourseDeadlineView(APIView):
                 
                 CourseDeadline.objects.bulk_create(course_deadlines)
 
+            except Exception as e:
+                    print("Error occurred while creating CourseDeadline records:" + e)
+                    return JsonResponse({'error': 'Error happened while creating records '}, status=500)
+
+            return JsonResponse({"message": "Deadlines created successfully"})
+        else:
+            return JsonResponse({'error': 'Invalid Input, Missing data'}, status=400)
+        
+        
+class FormSubmissionView(APIView):
+    
+    def get(self, request):
+        username = request.GET.get('username')
+        queryset = CourseDeadline.objects.filter(username=username)
+        serializer = CourseDeadlineSerializer(queryset, many=True)
+        return JsonResponse({'Deadlines': serializer.data})
+    def post(self,request):
+        username = request.data.get('username')
+        email = request.data.get('username')
+        code = request.data.get('code')
+        image = request.FILES.get('image')
+        
+        if username and email and code and image: 
+            try:
+                formsubmission = FormSubmission(username=username,email=email,codeid=code,image=image)
+                formsubmission.save()
             except Exception as e:
                     print("Error occurred while creating CourseDeadline records:" + e)
                     return JsonResponse({'error': 'Error happened while creating records '}, status=500)
