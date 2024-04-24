@@ -23,13 +23,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-^18g(rat)5p5*5wo@7kxy84i**ghf)o*28@v*l2d29_%jq=#$*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['0.0.0.0','192.168.73.94','127.0.0.1']
+ALLOWED_HOSTS = ['0.0.0.0','192.168.73.94','127.0.0.1','18.223.106.76','18.118.98.207','localhost','python.eyouthlearning.com']
 
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -37,12 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'base.apps.BaseConfig',
-    'newapp',
     'import_export'
-    # 'base.hotel.apps.HotelConfig'
+    'newapp.apps.NewappConfig'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -51,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'studypython.urls'
 
@@ -80,8 +82,12 @@ WSGI_APPLICATION = 'studypython.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'djangoprod',
+        'USER' : 'admin',
+        'PASSWORD' : 'password',
+        'HOST' : 'localhost',
+        'PORT' :''
     }
 }
 
@@ -127,15 +133,18 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+SECURE_SSL_REDIRECT = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
 
+import os
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
 MEDIA_ROOT = BASE_DIR / 'static/images'
 
-MEDIA_URL = '/images/'
+MEDIA_URL = '/static/images/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
