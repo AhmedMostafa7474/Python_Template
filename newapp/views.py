@@ -44,12 +44,6 @@ class CourseDeadlineView(APIView):
         
         
 class FormSubmissionView(APIView):
-    
-    def get(self, request):
-        username = request.GET.get('username')
-        queryset = CourseDeadline.objects.filter(username=username)
-        serializer = CourseDeadlineSerializer(queryset, many=True)
-        return JsonResponse({'Deadlines': serializer.data})
     def post(self,request):
         username = request.data.get('username')
         email = request.data.get('email')
@@ -61,9 +55,8 @@ class FormSubmissionView(APIView):
                 formsubmission = FormSubmission(username=username,email=email,codeid=code,image=image)
                 formsubmission.save()
             except Exception as e:
-                    print("Error occurred while creating CourseDeadline records:" + e)
-                    return JsonResponse({'error': 'Error happened while creating records '}, status=500)
+                    return JsonResponse({'error': 'Error happened while creating records ' + str(e)}, status=500)
 
-            return JsonResponse({"message": "Deadlines created successfully"})
+            return JsonResponse({"message": "Form Submission created successfully"})
         else:
             return JsonResponse({'error': 'Invalid Input, Missing data'}, status=400)
