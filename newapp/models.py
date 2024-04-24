@@ -11,9 +11,10 @@ class CourseDeadline(models.Model):
         return self.username + " " + self.coursekey
       
 class FormSubmission(models.Model):
-      username = models.CharField(max_length=200)
-      email = models.CharField(max_length=200)
-      codeid = models.CharField(max_length=200)  
+      username = models.CharField(max_length=200,null=True,blank=True)
+      email = models.CharField(max_length=200,null=True,blank=True)
+      codeid = models.CharField(max_length=200,null=True,blank=True)  
+      phonenumber = models.CharField(max_length=200,null=True,blank=True)  
       image = models.ImageField(null=True,blank=True)
       updated = models.DateTimeField(auto_now=True)
       created = models.DateTimeField(auto_now_add=True)  
