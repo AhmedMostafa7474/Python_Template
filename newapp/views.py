@@ -11,6 +11,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from rest_framework.views import APIView
 from datetime import datetime
+from django.core.mail import send_mail
+from django.conf import settings
 
 @method_decorator(csrf_exempt, name='dispatch')
 class CourseDeadlineView(APIView):
@@ -61,3 +63,23 @@ class FormSubmissionView(APIView):
             return JsonResponse({"message": "Form Submission created successfully"})
         else:
             return JsonResponse({'error': 'Invalid Input, Missing data'}, status=400)
+        
+
+    
+@method_decorator(csrf_exempt, name='dispatch')
+class SendEmailView(APIView):
+    def send_test_email(self):
+        subject = 'Test Email'
+        message = 'This is a test email sent from Django.'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = ['kudo7474@gmail.com']
+        send_mail(subject, message, email_from, recipient_list)
+
+    def post(self,request):
+        try:
+            self.send_test_email()
+            return JsonResponse({"message": "Email Sent successfully"})
+            
+        except Exception as e:
+            print(f"Email sending failed: {e}")
+            return JsonResponse({'error': 'Email Failed '+str(e)}, status=400)
