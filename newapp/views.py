@@ -50,10 +50,10 @@ class FormSubmissionView(APIView):
         username = request.data.get('username')
         email = request.data.get('email')
         code = request.data.get('code')
-        phonenumber = request.data.get('phonenumber')
+        phonenumber = request.data.get('phonenumber','')
         image = request.FILES.get('image')
         
-        if username and email and code and image and phonenumber: 
+        if username and email and code and image: 
             try:
                 formsubmission = FormSubmission(username=username,email=email,codeid=code,image=image , phonenumber=phonenumber)
                 formsubmission.save()
