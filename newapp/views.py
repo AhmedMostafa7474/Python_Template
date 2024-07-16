@@ -51,11 +51,12 @@ class FormSubmissionView(APIView):
         email = request.data.get('email')
         code = request.data.get('code')
         phonenumber = request.data.get('phonenumber','')
+        userid = request.data.get('userid','')
         image = request.FILES.get('image')
         
         if username and email and code and image: 
             try:
-                formsubmission = FormSubmission(username=username,email=email,codeid=code,image=image , phonenumber=phonenumber)
+                formsubmission = FormSubmission(username=username,email=email,codeid=code,image=image , phonenumber=phonenumber,userid=userid)
                 formsubmission.save()
             except Exception as e:
                     return JsonResponse({'error': 'Error happened while creating records ' + str(e)}, status=500)
