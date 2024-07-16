@@ -13,7 +13,8 @@ class CourseDeadline(models.Model):
 class FormSubmission(models.Model):
       username = models.CharField(max_length=200,null=True,blank=True)
       email = models.CharField(max_length=200,null=True,blank=True)
-      codeid = models.CharField(max_length=200,null=True,blank=True)  
+      codeid = models.CharField(max_length=200,null=True,blank=True)
+      userid =  models.CharField(max_length=200,null=True,blank=True)
       phonenumber = models.CharField(max_length=200,null=True,blank=True)  
       image = models.ImageField(null=True,blank=True)
       updated = models.DateTimeField(auto_now=True)
