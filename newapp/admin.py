@@ -6,7 +6,8 @@ from import_export.admin import ImportExportModelAdmin
 class FormSubmissionAdmin(ImportExportModelAdmin):
     resource_class = FormSubmissionResource      
     search_fields = ['username','email']
-    list_display = ('username', 'email','phonenumber','codeid','image')
+    list_display = ('username', 'email','phonenumber','codeid','userid','image')
+    
 
 admin.site.register(CourseDeadline)
 admin.site.register(FormSubmission,FormSubmissionAdmin)
