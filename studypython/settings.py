@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'base.apps.BaseConfig',
     'import_export',
-    'newapp.apps.NewappConfig'
+    'newapp.apps.NewappConfig',
     'reviews.apps.ReviewsConfig'
 ]
 
