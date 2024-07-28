@@ -60,3 +60,16 @@ class SurvayValidationView(generics.ListCreateAPIView):
             else:
                 return JsonResponse({"need_survey":"false"}, safe=False)
 
+class SurvayBasketValidationView(generics.ListCreateAPIView):
+    def get(self, request):
+        try:
+            username = request.GET.get('username')
+            existing_survey = Survey.objects.get(username=username)
+            status = existing_survey.completed
+            if status:
+                return JsonResponse({"coupon_valid":"true"}, safe=False)
+            else:
+                return JsonResponse({"coupon_valid":"false"}, safe=False)
+
+        except Survey.DoesNotExist:
+                return JsonResponse({"coupon_valid":"false"}, safe=False)
