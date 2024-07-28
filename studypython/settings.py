@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'base.apps.BaseConfig',
     'import_export',
     'newapp.apps.NewappConfig'
+    'reviews.apps.ReviewsConfig'
 ]
 
 MIDDLEWARE = [
