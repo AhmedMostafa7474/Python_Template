@@ -73,4 +73,4 @@ class Survey(models.Model):
     completed = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.id + " Survey"
+        return str(self.id) + " Survey"
