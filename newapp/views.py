@@ -1,10 +1,11 @@
 from django.shortcuts import render
-from .models import CourseDeadline,FormSubmission
+from .models import ContactUS, CourseDeadline,FormSubmission, TrainerContactUS
+from rest_framework import generics
 
 # Create your views here.
 from django.http import HttpResponse
 
-from .serializer import CourseDeadlineSerializer
+from .serializer import ContactUsSerializer, CourseDeadlineSerializer, TrainerContactUsSerializer
 from django.views import View
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -84,3 +85,11 @@ class SendEmailView(APIView):
         except Exception as e:
             print(f"Email sending failed: {e}")
             return JsonResponse({'error': 'Email Failed '+str(e)}, status=400)
+        
+class ContactUSView(generics.CreateAPIView):
+    serializer_class = ContactUsSerializer
+    queryset = ContactUS.objects.all()
+    
+class TrainerContactUSView(generics.CreateAPIView):
+    serializer_class = TrainerContactUsSerializer
+    queryset = TrainerContactUS.objects.all()
