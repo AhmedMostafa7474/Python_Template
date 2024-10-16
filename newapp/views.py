@@ -118,9 +118,10 @@ def lead_list(request):
         leads = leads.filter(campaign_name=campaign_filter)
 
     # Pagination
-    paginator = Paginator(leads, 10)  # Show 10 leads per page
+    paginator = Paginator(leads, 20)  # Show 10 leads per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    total_leads = leads.count()
 
     # List of distinct campaign names for filter dropdown
     campaign_names = Lead.objects.values_list('campaign_name', flat=True).distinct()
@@ -129,7 +130,8 @@ def lead_list(request):
         'page_obj': page_obj,
         'campaign_names': campaign_names,
         'query': query,
-        'selected_campaign': campaign_filter
+        'selected_campaign': campaign_filter,
+        'total_leads' : total_leads
     })
 
 # CSV Download View
