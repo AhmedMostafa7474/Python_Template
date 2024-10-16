@@ -42,3 +42,13 @@ class ContactUS(models.Model):
     email = models.EmailField(max_length=200)
     phone  = models.CharField(max_length=100,validators=[phone_regex])
     message = models.TextField()
+
+class Lead(models.Model):
+    campaign_name = models.CharField(max_length=250)
+    name = models.CharField(max_length=200)
+    email_id = models.EmailField(max_length=200)
+    mobile_no  = models.CharField(max_length=100,validators=[phone_regex])
+    utm_source = models.TextField(blank=True,default='')
+    type = models.CharField(max_length=100,default="Lead",blank=True)
+    updated = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)  
