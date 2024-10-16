@@ -23,6 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-^18g(rat)5p5*5wo@7kxy84i**ghf)o*28@v*l2d29_%jq=#$*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = False
 
 # settings.py
@@ -136,8 +137,9 @@ SIMPLE_JWT = {
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'Africa/Cairo'  # Set to Egypt/Cairo timezone
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
 
 USE_I18N = True
 

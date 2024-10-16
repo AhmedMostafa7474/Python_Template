@@ -1,11 +1,11 @@
 from django.shortcuts import render
-from .models import ContactUS, CourseDeadline,FormSubmission, TrainerContactUS
+from .models import ContactUS, CourseDeadline,FormSubmission, Lead, TrainerContactUS
 from rest_framework import generics
 
 # Create your views here.
 from django.http import HttpResponse
 
-from .serializer import ContactUsSerializer, CourseDeadlineSerializer, TrainerContactUsSerializer
+from .serializer import ContactUsSerializer, CourseDeadlineSerializer, LeadSerializer, TrainerContactUsSerializer
 from django.views import View
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -93,3 +93,72 @@ class ContactUSView(generics.CreateAPIView):
 class TrainerContactUSView(generics.CreateAPIView):
     serializer_class = TrainerContactUsSerializer
     queryset = TrainerContactUS.objects.all()
+    
+class LeadView(generics.ListCreateAPIView):
+    serializer_class = LeadSerializer
+    queryset = Lead.objects.all()
+    
+from django.core.paginator import Paginator
+from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
+import csv
+from django.http import HttpResponse
+
+def lead_list(request):
+    # Search and filter functionality
+    query = request.GET.get('query', '')
+    campaign_filter = request.GET.get('campaign_name', '')
+    
+    leads = Lead.objects.all().order_by('-id')
+
+    if query:
+        leads = leads.filter(name__icontains=query) | leads.filter(email_id__icontains=query)
+    
+    if campaign_filter:
+        leads = leads.filter(campaign_name=campaign_filter)
+
+    # Pagination
+    paginator = Paginator(leads, 10)  # Show 10 leads per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # List of distinct campaign names for filter dropdown
+    campaign_names = Lead.objects.values_list('campaign_name', flat=True).distinct()
+
+    return render(request, 'lead_list.html', {
+        'page_obj': page_obj,
+        'campaign_names': campaign_names,
+        'query': query,
+        'selected_campaign': campaign_filter
+    })
+
+# CSV Download View
+def download_csv(request):
+    # Fetch all leads, or filter if needed
+    leads = Lead.objects.all()
+
+    # Filter based on search and campaign name
+    query = request.GET.get('query', '')
+    campaign_filter = request.GET.get('campaign_name', '')
+
+    if query:
+        leads = leads.filter(name__icontains=query) | leads.filter(email_id__icontains=query)
+    
+    if campaign_filter:
+        leads = leads.filter(campaign_name=campaign_filter)
+
+    # Prepare CSV response
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="leads.csv"'
+    
+    writer = csv.writer(response)
+    writer.writerow(['ID', 'Campaign Name', 'Name', 'Email', 'Mobile', 'UTM Source', 'Type', 'Created'])
+    
+    for lead in leads:
+        writer.writerow([lead.id, lead.campaign_name, lead.name, lead.email_id, lead.mobile_no, lead.utm_source, lead.type, lead.created])
+    
+    return response
+
+def lead_detail(request, pk):
+    lead = get_object_or_404(Lead, pk=pk)
+    return render(request, 'lead_detail.html', {'lead': lead})
