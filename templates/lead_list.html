@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lead Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .search-bar {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .search-bar input[type="text"] {
+      padding: 8px;
+      font-size: 16px;
+      width: 250px;
+    }
+    .search-bar select, .search-bar button {
+      padding: 8px;
+      font-size: 16px;
+    }
+    .remove-filters-btn {
+      margin-left: 10px;
+      padding: 8px 16px;
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .remove-filters-btn:hover {
+      background-color: #cc0000;
+    }
+    .table-container {
+      margin-top: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+    .pagination {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .pagination a {
+      margin: 0 5px;
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+    .pagination a:hover {
+      background-color: #0056b3;
+    }
+    .download-btn {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .download-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Lead List</h1>
+    </div>
+
+    <!-- Search Bar and Campaign Filter -->
+    <div class="search-bar">
+      <form method="GET">
+        <input type="text" name="query" value="{{ query }}" placeholder="Search by name or email">
+        
+        <select name="campaign_name">
+          <option value="">All Campaigns</option>
+          {% for campaign in campaign_names %}
+            <option value="{{ campaign }}" {% if selected_campaign == campaign %}selected{% endif %}>{{ campaign }}</option>
+          {% endfor %}
+        </select>
+
+        <button type="submit">Search</button>
+
+        <!-- Remove Filters Button -->
+        <a href="{% url 'lead_list' %}" class="remove-filters-btn">Remove Filters</a>
+      </form>
+
+      <!-- CSV Download Button -->
+      <a href="{% url 'download_csv' %}" class="download-btn">Download as CSV</a>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Campaign Name</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Mobile</th>
+            <th>Type</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for lead in page_obj %}
+          <tr>
+            <td>{{ lead.campaign_name }}</td>
+            <td>{{ lead.name }}</td>
+            <td>{{ lead.email_id }}</td>
+            <td>{{ lead.mobile_no }}</td>
+            <td>{{ lead.type }}</td>
+            <td>{{ lead.created }}</td>
+            <td><a href="{% url 'lead_detail' lead.pk %}">View Details</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        {% if page_obj.has_previous %}
+          <a href="?page=1">First</a>
+          <a href="?page={{ page_obj.previous_page_number }}&query={{ query }}&campaign_name={{ selected_campaign }}">Previous</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <a href="#" style="background-color: #0056b3;">{{ num }}</a>
+          {% else %}
+            <a href="?page={{ num }}&query={{ query }}&campaign_name={{ selected_campaign }}">{{ num }}</a>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}&query={{ query }}&campaign_name={{ selected_campaign }}">Next</a>
+          <a href="?page={{ page_obj.paginator.num_pages }}&query={{ query }}&campaign_name={{ selected_campaign }}">Last</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</body>
+</html>
